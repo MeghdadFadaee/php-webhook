@@ -151,7 +151,7 @@ class Request
 
     public function uri(): string
     {
-        return $this->server['PHP_SELF'] ?? '/';
+        return $this->server['REQUEST_URI'] ?? '/';
     }
 
     public function uriWithQuery(): string
