@@ -36,7 +36,7 @@ class Logger
      | Internals
      |-----------------------------------------------------------------*/
 
-    protected static function write(string $channel, array $data): void
+    public static function write(string $channel, array $data): void
     {
         $directory = static::ensureDirectory();
 
