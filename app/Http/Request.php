@@ -232,14 +232,16 @@ class Request
     protected function parseJsonBody(): array
     {
         return $this->json ??= tap(null, function (null $_) {
-            $contentType = $this->header('content-type', '');
 
-            if (str_contains($contentType, 'application/json')) {
-                $raw = file_get_contents('php://input');
-                $decoded = json_decode($raw, true);
-                return is_array($decoded) ? $decoded : [];
-            }
-            return [];
+            // Commented due to Clients Skill issue.
+            // $contentType = $this->header('content-type', '');
+            // if (str_contains($contentType, 'application/json')) {
+            //     return [];
+            // }
+
+            $raw = file_get_contents('php://input');
+            $decoded = json_decode($raw, true);
+            return is_array($decoded) ? $decoded : [];
         });
     }
 
