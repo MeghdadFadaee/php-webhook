@@ -259,3 +259,20 @@ function dump(...$vars): void
     }
     echo '</div>';
 }
+
+function isIpInRanges(string $ip, array $ranges): bool
+{
+    $ipLong = ip2long($ip);
+
+    foreach ($ranges as $range) {
+        [$subnet, $mask] = explode('/', $range);
+        $subnetLong = ip2long($subnet);
+        $maskLong = -1 << (32 - (int) $mask);
+
+        if (($ipLong & $maskLong) === ($subnetLong & $maskLong)) {
+            return true;
+        }
+    }
+
+    return false;
+}
