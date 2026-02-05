@@ -130,12 +130,12 @@ function class_basename($class): string
 /**
  * Get all files inside a directory recursively.
  *
- * @param string $directory
+ * @param  string  $directory
  * @return array
  */
 function getAllFilesRecursively(string $directory): array
 {
-    if (! is_dir($directory)) {
+    if (!is_dir($directory)) {
         return [];
     }
 
@@ -157,10 +157,32 @@ function getAllFilesRecursively(string $directory): array
     return $files;
 }
 
+function makeAppContainer(): array
+{
+    /** @var SplFileInfo[] $iterator */
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(
+            APP_PATH,
+            FilesystemIterator::SKIP_DOTS
+        )
+    );
+
+    $files = [];
+    foreach ($iterator as $file) {
+        if (!$file->isFile() || $file->getExtension() !== 'php') {
+            continue;
+        }
+        $key = str_replace('.php', '', $file->getBasename());
+        $files[$key] = $file->getPathname();
+    }
+
+    return $files;
+}
+
 /**
  * Dump variables and stop execution.
  *
- * @param mixed ...$vars
+ * @param  mixed  ...$vars
  * @return void
  */
 function dd(...$vars): void
@@ -175,9 +197,9 @@ function dd(...$vars): void
         // Print header with file:line
         fwrite(STDOUT, "Dump (dd) from {$file}:{$line}\n");
         foreach ($vars as $i => $v) {
-            fwrite(STDOUT, "----- Dump #" . ($i + 1) . " -----\n");
+            fwrite(STDOUT, "----- Dump #".($i + 1)." -----\n");
             // Use print_r for readable structure (works for arrays/objects/resources)
-            fwrite(STDOUT, print_r($v, true) . "\n");
+            fwrite(STDOUT, print_r($v, true)."\n");
         }
         exit(1);
     }
@@ -192,14 +214,14 @@ function dd(...$vars): void
         .meta{font-size:12px;color:#6a737d;margin-bottom:6px;}
     </style>';
     echo '</head><body>';
-    echo '<div class="dd-header">Dump (dd) from <strong>' . htmlspecialchars($file, ENT_QUOTES, 'UTF-8') . ':' . $line . '</strong></div>';
+    echo '<div class="dd-header">Dump (dd) from <strong>'.htmlspecialchars($file, ENT_QUOTES, 'UTF-8').':'.$line.'</strong></div>';
 
     foreach ($vars as $i => $v) {
         echo '<div class="dd-block">';
-        echo '<div class="meta">Dump #' . ($i + 1) . '</div>';
+        echo '<div class="meta">Dump #'.($i + 1).'</div>';
         // Convert variable to a readable string
         $output = print_r($v, true);
-        echo '<pre>' . htmlspecialchars($output, ENT_QUOTES, 'UTF-8') . '</pre>';
+        echo '<pre>'.htmlspecialchars($output, ENT_QUOTES, 'UTF-8').'</pre>';
         echo '</div>';
     }
 
@@ -210,7 +232,7 @@ function dd(...$vars): void
 /**
  * dump: Dump variables but do NOT stop execution.
  *
- * @param mixed ...$vars
+ * @param  mixed  ...$vars
  * @return void
  */
 function dump(...$vars): void
@@ -223,17 +245,17 @@ function dump(...$vars): void
     if (PHP_SAPI === 'cli') {
         fwrite(STDOUT, "Dump from {$file}:{$line}\n");
         foreach ($vars as $i => $v) {
-            fwrite(STDOUT, "----- Dump #" . ($i + 1) . " -----\n");
-            fwrite(STDOUT, print_r($v, true) . "\n");
+            fwrite(STDOUT, "----- Dump #".($i + 1)." -----\n");
+            fwrite(STDOUT, print_r($v, true)."\n");
         }
         return;
     }
 
     echo '<div style="font-family: Menlo, Monaco, monospace; background:#fff; border:1px solid #e1e4e8; padding:8px; margin:8px 0;">';
-    echo '<div style="font-size:12px;color:#6a737d;margin-bottom:6px;">Dump from <strong>' . htmlspecialchars($file, ENT_QUOTES, 'UTF-8') . ':' . $line . '</strong></div>';
+    echo '<div style="font-size:12px;color:#6a737d;margin-bottom:6px;">Dump from <strong>'.htmlspecialchars($file, ENT_QUOTES, 'UTF-8').':'.$line.'</strong></div>';
     foreach ($vars as $v) {
         $out = print_r($v, true);
-        echo '<pre style="white-space:pre-wrap;word-wrap:break-word;margin:0;">' . htmlspecialchars($out, ENT_QUOTES, 'UTF-8') . '</pre>';
+        echo '<pre style="white-space:pre-wrap;word-wrap:break-word;margin:0;">'.htmlspecialchars($out, ENT_QUOTES, 'UTF-8').'</pre>';
     }
     echo '</div>';
 }
