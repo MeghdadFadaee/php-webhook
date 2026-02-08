@@ -12,9 +12,8 @@ class JsonResponse extends Response
         ]);
     }
 
-    public static function error(string|HttpStatus $message, ?array $errors = null): static
+    public static function error(string|HttpStatus $message, ?array $errors = null, HttpStatus $status = HttpStatus::INTERNAL_SERVER_ERROR): static
     {
-        $status = HttpStatus::INTERNAL_SERVER_ERROR;
         if ($message instanceof HttpStatus) {
             $status = $message;
             $message = $message->message();

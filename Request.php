@@ -185,18 +185,16 @@ class Request
 
     protected function parseHeaders(): array
     {
-        return $this->headers ??= tap($this->server, function (array $server) {
-            $headers = [];
+        $headers = [];
 
-            foreach ($this->server as $key => $value) {
-                if (str_starts_with($key, 'HTTP_')) {
-                    $name = str_replace('_', '-', strtolower(substr($key, 5)));
-                    $headers[$name] = $value;
-                }
+        foreach ($this->server as $key => $value) {
+            if (str_starts_with($key, 'HTTP_')) {
+                $name = str_replace('_', '-', strtolower(substr($key, 5)));
+                $headers[$name] = $value;
             }
+        }
 
-            return $headers;
-        });
+        return $this->headers = $headers;
     }
 
     public function header(string $key, mixed $default = null): mixed
@@ -231,18 +229,9 @@ class Request
 
     protected function parseJsonBody(): array
     {
-        return $this->json ??= tap(null, function (null $_) {
-
-            // Commented due to Clients Skill issue.
-            // $contentType = $this->header('content-type', '');
-            // if (str_contains($contentType, 'application/json')) {
-            //     return [];
-            // }
-
-            $raw = file_get_contents('php://input');
-            $decoded = json_decode($raw, true);
-            return is_array($decoded) ? $decoded : [];
-        });
+        $raw = file_get_contents('php://input');
+        $decoded = json_decode($raw, true);
+        return $this->json = is_array($decoded) ? $decoded : [];
     }
 
     public function json(?string $key = null, mixed $default = null): mixed

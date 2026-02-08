@@ -20,7 +20,7 @@ class ClientResponse
         $body       = substr($raw, $headerSize);
 
         return new self(
-            HttpStatus::fromCode($info['http_code']),
+            HttpStatus::tryFrom($info['http_code']),
             $body,
             self::parseHeaders($headerRaw)
         );

@@ -104,9 +104,4 @@ enum HttpStatus: int
     {
         return $this->value >= 500;
     }
-
-    public static function fromCode(int $code): ?self
-    {
-        return self::tryFrom($code);
-    }
 }
