@@ -13,8 +13,11 @@ require 'JsonResponse.php';
 require 'Client.php';
 require 'ClientResponse.php';
 
+require 'Messenger.php';
+require 'MainController.php';
+
 $hooks = [
-    // '/*' => MainController::class,
+    '/*' => MainController::class,
     '*' => fn(Request $request) => JsonResponse::successful('service is running!')->send()
 ];
 
