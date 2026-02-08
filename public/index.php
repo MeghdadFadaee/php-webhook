@@ -6,6 +6,7 @@ define("BASE_PATH", realpath(''));
 
 require 'Str.php';
 require 'Arr.php';
+require 'helpers.php';
 require 'HttpStatus.php';
 require 'Request.php';
 require 'Response.php';
